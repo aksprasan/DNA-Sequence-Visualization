@@ -2,25 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DNA Sequence Visualizer</title>
+  <title>8-bit Sequence Visualizer</title>
   <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
 
-  <h2>DNA Sequence to Pixel Visualization</h2>
+  <h2>8-bit Sequence to Pixel Visualization</h2>
 
-  <textarea id="sequenceInput" placeholder="Enter DNA sequence (A, C, G, T, N)..."></textarea>
+  <textarea
+    id="sequenceInput"
+    placeholder="Enter 8-bit values (0–255), separated by spaces or commas"
+  ></textarea>
 
-  <div class="controls">
-    <label>
-      <input type="checkbox" id="colorMode">
-      Use colorful scale
-    </label>
-  </div>
+  <br>
 
-  <button onclick="generateImage()">Generate Image</button>
+  <button onclick="generateImage()">Generate</button>
+
+  <label>
+    <input type="checkbox" id="colorMode">
+    Color mode
+  </label>
 
   <div id="output"></div>
+
   <script src="js/main.js"></script>
 </body>
 </html>

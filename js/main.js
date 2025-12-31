@@ -1,53 +1,59 @@
-const nucleotideMap = {
-      'A': 64,
-      'C': 128,
-      'G': 192,
-      'T': 255,
-      'N': 0
-    };
+const ranges = {
+  A: [3, 65],
+  C: [66, 128],
+  G: [129, 191],
+  T: [192, 253]
+};
 
-    function generateImage() {
-      const input = document.getElementById('sequenceInput').value.toUpperCase().trim();
-      const useColor = document.getElementById('colorMode').checked;
-      const outputDiv = document.getElementById('output');
+function buildMapTable() {
+  const table = new Array(256).fill('N');
+  for (let i = ranges.A[0]; i <= ranges.A[1]; i++) table[i] = 'A';
+  for (let i = ranges.C[0]; i <= ranges.C[1]; i++) table[i] = 'C';
+  for (let i = ranges.G[0]; i <= ranges.G[1]; i++) table[i] = 'G';
+  for (let i = ranges.T[0]; i <= ranges.T[1]; i++) table[i] = 'T';
+  return table;
+}
 
-      if (!input) {
-        alert("Please enter a DNA sequence.");
-        return;
-      }
+const map_table = buildMapTable();
 
-      let table = document.createElement('table');
-      let row = document.createElement('tr');
+function getColor(val, useColor) {
+  if (useColor) {
+    return `rgb(${val}, ${255 - val}, ${Math.floor(val / 2)})`;
+  }
+  return `rgb(${val}, ${val}, ${val})`;
+}
 
-      for (let char of input) {
-        let value = nucleotideMap[char] ?? 0;
+function generateImage() {
+  const rawInput = document.getElementById('sequenceInput').value.trim();
+  const useColor = document.getElementById('colorMode').checked;
+  const outputDiv = document.getElementById('output');
 
-        let color;
-        if (useColor) {
-          color = `rgb(${value}, ${255 - value}, ${value / 2})`;
-        } else {
-          color = `rgb(${value}, ${value}, ${value})`;
-        }
+  if (!rawInput) {
+    alert("Please enter 8-bit values.");
+    return;
+  }
 
-        let cell = document.createElement('td');
-        cell.style.backgroundColor = color;
+  const values = rawInput
+    .split(/[\s,]+/)
+    .map(v => Number(v))
+    .filter(v => !isNaN(v) && v >= 0 && v <= 255);
 
-        if (value === 0) {
-          cell.textContent = 'N';
-        } else if (value <= 63) {
-          cell.textContent = 'A';
-        } else if (value <= 127) {
-          cell.textContent = 'C';
-        } else if (value <= 191) {
-          cell.textContent = 'G';
-        } else {
-          cell.textContent = 'T';
-        }
+  if (values.length === 0) {
+    alert("No valid 8-bit values found.");
+    return;
+  }
 
-        row.appendChild(cell);
-      }
+  const table = document.createElement('table');
+  const row = document.createElement('tr');
 
-      table.appendChild(row);
-      outputDiv.innerHTML = '';
-      outputDiv.appendChild(table);
-    }
+  for (let val of values) {
+    const cell = document.createElement('td');
+    cell.style.backgroundColor = getColor(val, useColor);
+    cell.textContent = map_table[val];
+    row.appendChild(cell);
+  }
+
+  table.appendChild(row);
+  outputDiv.innerHTML = '';
+  outputDiv.appendChild(table);
+}
