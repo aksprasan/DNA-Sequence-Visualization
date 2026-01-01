@@ -2,26 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>8-bit Sequence Visualizer</title>
+  <title>8-bit Sequence Visualization</title>
   <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
 
-  <h2>8-bit Sequence to Pixel Visualization</h2>
+  <h2>8-bit Sequence Visualization</h2>
+
+  <p>
+    Enter a raw stream of digits. Every <strong>3 digits</strong> represent one
+    8-bit value (000–255). No delimiters.
+  </p>
 
   <textarea
     id="sequenceInput"
-    placeholder="Enter 8-bit values (0–255), separated by spaces or commas"
+    placeholder="Example: 000032064128191192253254255"
   ></textarea>
 
-  <br>
+  <div class="ranges">
+    <div>N: 0–2 & 254–255 (fixed)</div>
+    <div>
+      A:
+      <input id="Amin" value="3"> –
+      <input id="Amax" value="65">
+    </div>
+    <div>
+      C:
+      <input id="Cmin" value="66"> –
+      <input id="Cmax" value="128">
+    </div>
+    <div>
+      G:
+      <input id="Gmin" value="129"> –
+      <input id="Gmax" value="191">
+    </div>
+    <div>
+      T:
+      <input id="Tmin" value="192"> –
+      <input id="Tmax" value="253">
+    </div>
+  </div>
 
   <button onclick="generateImage()">Generate</button>
-
-  <label>
-    <input type="checkbox" id="colorMode">
-    Color mode
-  </label>
 
   <div id="output"></div>
 

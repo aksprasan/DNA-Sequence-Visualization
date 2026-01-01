@@ -1,59 +1,66 @@
-const ranges = {
-  A: [3, 65],
-  C: [66, 128],
-  G: [129, 191],
-  T: [192, 253]
-};
-
-function buildMapTable() {
+function buildMapTable(r) {
   const table = new Array(256).fill('N');
-  for (let i = ranges.A[0]; i <= ranges.A[1]; i++) table[i] = 'A';
-  for (let i = ranges.C[0]; i <= ranges.C[1]; i++) table[i] = 'C';
-  for (let i = ranges.G[0]; i <= ranges.G[1]; i++) table[i] = 'G';
-  for (let i = ranges.T[0]; i <= ranges.T[1]; i++) table[i] = 'T';
+
+  for (let i = r.Amin; i <= r.Amax; i++) table[i] = 'A';
+  for (let i = r.Cmin; i <= r.Cmax; i++) table[i] = 'C';
+  for (let i = r.Gmin; i <= r.Gmax; i++) table[i] = 'G';
+  for (let i = r.Tmin; i <= r.Tmax; i++) table[i] = 'T';
+
   return table;
 }
 
-const map_table = buildMapTable();
+function getCellColor(val) {
+  return `rgb(${val}, ${160 - val * 0.4}, ${255 - val})`;
+}
 
-function getColor(val, useColor) {
-  if (useColor) {
-    return `rgb(${val}, ${255 - val}, ${Math.floor(val / 2)})`;
-  }
-  return `rgb(${val}, ${val}, ${val})`;
+function getTextColor(val) {
+  return val > 140 ? '#000' : '#fff';
 }
 
 function generateImage() {
-  const rawInput = document.getElementById('sequenceInput').value.trim();
-  const useColor = document.getElementById('colorMode').checked;
-  const outputDiv = document.getElementById('output');
+  const raw = document.getElementById('sequenceInput').value.trim();
+  const output = document.getElementById('output');
 
-  if (!rawInput) {
-    alert("Please enter 8-bit values.");
+  if (raw.length === 0 || raw.length % 3 !== 0) {
+    alert("Input length must be divisible by 3.");
     return;
   }
 
-  const values = rawInput
-    .split(/[\s,]+/)
-    .map(v => Number(v))
-    .filter(v => !isNaN(v) && v >= 0 && v <= 255);
+  const ranges = {
+    Amin: Number(document.getElementById('Amin').value),
+    Amax: Number(document.getElementById('Amax').value),
+    Cmin: Number(document.getElementById('Cmin').value),
+    Cmax: Number(document.getElementById('Cmax').value),
+    Gmin: Number(document.getElementById('Gmin').value),
+    Gmax: Number(document.getElementById('Gmax').value),
+    Tmin: Number(document.getElementById('Tmin').value),
+    Tmax: Number(document.getElementById('Tmax').value)
+  };
 
-  if (values.length === 0) {
-    alert("No valid 8-bit values found.");
-    return;
+  const mapTable = buildMapTable(ranges);
+
+  const values = [];
+  for (let i = 0; i < raw.length; i += 3) {
+    const v = parseInt(raw.slice(i, i + 3), 10);
+    if (isNaN(v) || v < 0 || v > 255) {
+      alert("Invalid 8-bit value detected.");
+      return;
+    }
+    values.push(v);
   }
 
   const table = document.createElement('table');
   const row = document.createElement('tr');
 
-  for (let val of values) {
+  for (const val of values) {
     const cell = document.createElement('td');
-    cell.style.backgroundColor = getColor(val, useColor);
-    cell.textContent = map_table[val];
+    cell.style.backgroundColor = getCellColor(val);
+    cell.style.color = getTextColor(val);
+    cell.textContent = mapTable[val];
     row.appendChild(cell);
   }
 
   table.appendChild(row);
-  outputDiv.innerHTML = '';
-  outputDiv.appendChild(table);
+  output.innerHTML = '';
+  output.appendChild(table);
 }
