@@ -18,11 +18,20 @@ function getTextColor(val) {
 }
 
 function generateImage() {
-  const raw = document.getElementById('sequenceInput').value.trim();
+  const input = document.getElementById('sequenceInput').value.trim();
   const output = document.getElementById('output');
 
+  const lines = input.split('\n');
+  if (lines.length !== 2 || !lines[0].startsWith('@')) {
+    alert("Input must have two lines. First line must start with @.");
+    return;
+  }
+
+  const header = lines[0];
+  const raw = lines[1].trim();
+
   if (raw.length === 0 || raw.length % 3 !== 0) {
-    alert("Input length must be divisible by 3.");
+    alert("Second line length must be divisible by 3.");
     return;
   }
 
@@ -49,6 +58,32 @@ function generateImage() {
     values.push(v);
   }
 
+  let baseLine = '';
+  let qualityLine = '';
+
+  for (const val of values) {
+    const base = mapTable[val];
+    baseLine += base;
+
+    let min;
+    if (base === 'A') min = ranges.Amin;
+    else if (base === 'C') min = ranges.Cmin;
+    else if (base === 'G') min = ranges.Gmin;
+    else if (base === 'T') min = ranges.Tmin;
+    else min = 0;
+
+    const quality = val - min;
+    qualityLine += String.fromCharCode(quality + 33);
+  }
+
+  // FASTQ-like text output
+  const textBlock = document.createElement('pre');
+  textBlock.textContent =
+    header + '\n' +
+    baseLine + '\n' +
+    qualityLine;
+
+  // Existing visualization table
   const table = document.createElement('table');
   const row = document.createElement('tr');
 
@@ -61,6 +96,8 @@ function generateImage() {
   }
 
   table.appendChild(row);
+
   output.innerHTML = '';
+  output.appendChild(textBlock);
   output.appendChild(table);
 }
