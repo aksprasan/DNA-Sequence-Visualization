@@ -1,20 +1,22 @@
 function buildMapTable(r) {
   const table = new Array(256).fill('N');
-
   for (let i = r.Amin; i <= r.Amax; i++) table[i] = 'A';
   for (let i = r.Cmin; i <= r.Cmax; i++) table[i] = 'C';
   for (let i = r.Gmin; i <= r.Gmax; i++) table[i] = 'G';
   for (let i = r.Tmin; i <= r.Tmax; i++) table[i] = 'T';
-
   return table;
 }
 
-function getCellColor(val) {
-  return `rgb(${val}, ${160 - val * 0.4}, ${255 - val})`;
+function qualityToAccuracy(q) {
+  // Phred score to accuracy percentage
+  const errorProb = Math.pow(10, -q / 10);
+  return ((1 - errorProb) * 100).toFixed(1);
 }
 
-function getTextColor(val) {
-  return val > 140 ? '#000' : '#fff';
+function qualityColor(q) {
+  if (q >= 30) return 'green';
+  if (q >= 20) return 'orange';
+  return 'red';
 }
 
 function generateImage() {
@@ -28,76 +30,62 @@ function generateImage() {
   }
 
   const header = lines[0];
-  const raw = lines[1].trim();
+  const raw = lines[1];
 
-  if (raw.length === 0 || raw.length % 3 !== 0) {
+  if (raw.length % 3 !== 0) {
     alert("Second line length must be divisible by 3.");
     return;
   }
 
   const ranges = {
-    Amin: Number(document.getElementById('Amin').value),
-    Amax: Number(document.getElementById('Amax').value),
-    Cmin: Number(document.getElementById('Cmin').value),
-    Cmax: Number(document.getElementById('Cmax').value),
-    Gmin: Number(document.getElementById('Gmin').value),
-    Gmax: Number(document.getElementById('Gmax').value),
-    Tmin: Number(document.getElementById('Tmin').value),
-    Tmax: Number(document.getElementById('Tmax').value)
+    Amin: +Amin.value, Amax: +Amax.value,
+    Cmin: +Cmin.value, Cmax: +Cmax.value,
+    Gmin: +Gmin.value, Gmax: +Gmax.value,
+    Tmin: +Tmin.value, Tmax: +Tmax.value
   };
 
   const mapTable = buildMapTable(ranges);
 
-  const values = [];
-  for (let i = 0; i < raw.length; i += 3) {
-    const v = parseInt(raw.slice(i, i + 3), 10);
-    if (isNaN(v) || v < 0 || v > 255) {
-      alert("Invalid 8-bit value detected.");
-      return;
-    }
-    values.push(v);
-  }
-
   let baseLine = '';
   let qualityLine = '';
+  let explanationLine = '';
 
-  for (const val of values) {
+  const table = document.createElement('table');
+  const row = document.createElement('tr');
+
+  for (let i = 0; i < raw.length; i += 3) {
+    const val = parseInt(raw.slice(i, i + 3), 10);
     const base = mapTable[val];
     baseLine += base;
 
-    let min;
+    let min = 0;
     if (base === 'A') min = ranges.Amin;
     else if (base === 'C') min = ranges.Cmin;
     else if (base === 'G') min = ranges.Gmin;
     else if (base === 'T') min = ranges.Tmin;
-    else min = 0;
 
-    const quality = val - min;
-    qualityLine += String.fromCharCode(quality + 33);
-  }
+    const q = val - min;
+    qualityLine += String.fromCharCode(q + 33);
 
-  // FASTQ-like text output
-  const textBlock = document.createElement('pre');
-  textBlock.textContent =
-    header + '\n' +
-    baseLine + '\n' +
-    qualityLine;
+    const acc = qualityToAccuracy(q);
+    explanationLine += `[${acc}%] `;
 
-  // Existing visualization table
-  const table = document.createElement('table');
-  const row = document.createElement('tr');
-
-  for (const val of values) {
     const cell = document.createElement('td');
-    cell.style.backgroundColor = getCellColor(val);
-    cell.style.color = getTextColor(val);
-    cell.textContent = mapTable[val];
+    cell.textContent = base;
+    cell.className = `base-${base}`;
     row.appendChild(cell);
   }
 
   table.appendChild(row);
 
+  const text = document.createElement('pre');
+  text.innerHTML =
+    header + '\n' +
+    baseLine + '\n' +
+    qualityLine + '\n' +
+    explanationLine;
+
   output.innerHTML = '';
-  output.appendChild(textBlock);
+  output.appendChild(text);
   output.appendChild(table);
 }
