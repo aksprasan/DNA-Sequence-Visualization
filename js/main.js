@@ -88,4 +88,103 @@ function generateImage() {
   output.innerHTML = '';
   output.appendChild(text);
   output.appendChild(table);
+
+  // Add new improved visualization below
+  generateImprovedVisualization(header, raw, ranges, mapTable);
+}
+
+function generateImprovedVisualization(header, raw, ranges, mapTable) {
+  const output = document.getElementById('output');
+  
+  // Create separator
+  const separator = document.createElement('hr');
+  separator.style.margin = '30px 0';
+  output.appendChild(separator);
+  
+  const title = document.createElement('h3');
+  title.textContent = 'Improved Visualization (Mohammed\'s Feedback)';
+  output.appendChild(title);
+  
+  const description = document.createElement('p');
+  description.innerHTML = '<strong>Features:</strong> Colored text bases • Perfect alignment • Hover for quality % • Quality-scaled colored boxes';
+  description.style.fontSize = '14px';
+  description.style.color = '#666';
+  description.style.marginBottom = '15px';
+  output.appendChild(description);
+  
+  // Create container for aligned visualization
+  const container = document.createElement('div');
+  container.className = 'improved-viz';
+  
+  // Header
+  const headerDiv = document.createElement('div');
+  headerDiv.className = 'viz-header';
+  headerDiv.textContent = header;
+  container.appendChild(headerDiv);
+  
+  // Create aligned rows
+  const baseRow = document.createElement('div');
+  baseRow.className = 'viz-row base-row';
+  
+  const qualityRow = document.createElement('div');
+  qualityRow.className = 'viz-row quality-row';
+  
+  // Add an additional row for quality boxes (reusing the colored box concept)
+  const qualityBoxRow = document.createElement('div');
+  qualityBoxRow.className = 'viz-row quality-box-row';
+  
+  for (let i = 0; i < raw.length; i += 3) {
+    const val = parseInt(raw.slice(i, i + 3), 10);
+    const base = mapTable[val];
+    
+    let min = 0;
+    if (base === 'A') min = ranges.Amin;
+    else if (base === 'C') min = ranges.Cmin;
+    else if (base === 'G') min = ranges.Gmin;
+    else if (base === 'T') min = ranges.Tmin;
+    
+    const q = val - min;
+    const qualityChar = String.fromCharCode(q + 33);
+    const acc = qualityToAccuracy(q);
+    
+    // Create base character with color (text-based, no boxes)
+    const baseSpan = document.createElement('span');
+    baseSpan.textContent = base;
+    baseSpan.className = `colored-base base-${base}`;
+    baseRow.appendChild(baseSpan);
+    
+    // Create quality character with hover tooltip
+    const qualitySpan = document.createElement('span');
+    qualitySpan.textContent = qualityChar;
+    qualitySpan.className = 'quality-char-text';
+    qualitySpan.title = `Quality: ${q}, Accuracy: ${acc}%`;
+    qualitySpan.setAttribute('data-accuracy', acc);
+    qualitySpan.setAttribute('data-quality', q);
+    qualityRow.appendChild(qualitySpan);
+    
+    // Create quality box (reusing Mohammed's liked colored boxes concept)
+    const qualityBox = document.createElement('span');
+    qualityBox.textContent = ' '; // Empty space to create a box
+    qualityBox.className = `quality-box quality-${qualityColor(q)}`;
+    qualityBox.title = `Quality: ${q}, Accuracy: ${acc}%`;
+    qualityBox.setAttribute('data-accuracy', acc);
+    qualityBox.setAttribute('data-quality', q);
+    qualityBoxRow.appendChild(qualityBox);
+  }
+  
+  container.appendChild(baseRow);
+  container.appendChild(qualityRow);
+  container.appendChild(qualityBoxRow);
+  
+  // Add labels for clarity
+  const labelsDiv = document.createElement('div');
+  labelsDiv.className = 'viz-labels';
+  labelsDiv.innerHTML = `
+    <div><span class="label">Bases:</span> Colored text (A, T, C, G)</div>
+    <div><span class="label">Quality:</span> ASCII characters (hover for %)</div>
+    <div><span class="label">Quality Boxes:</span> Color-coded by quality score</div>
+  `;
+  container.appendChild(labelsDiv);
+  
+  output.appendChild(container);
 }
