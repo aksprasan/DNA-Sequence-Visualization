@@ -102,15 +102,8 @@ function generateImprovedVisualization(header, raw, ranges, mapTable) {
   output.appendChild(separator);
   
   const title = document.createElement('h3');
-  title.textContent = 'Improved Visualization (Mohammed\'s Feedback)';
+  title.textContent = 'Improved Visualization';
   output.appendChild(title);
-  
-  const description = document.createElement('p');
-  description.innerHTML = '<strong>Features:</strong> Colored text bases • Perfect alignment • Hover for quality % • Quality-scaled colored boxes';
-  description.style.fontSize = '14px';
-  description.style.color = '#666';
-  description.style.marginBottom = '15px';
-  output.appendChild(description);
   
   // Create container for aligned visualization
   const container = document.createElement('div');
@@ -175,16 +168,6 @@ function generateImprovedVisualization(header, raw, ranges, mapTable) {
   container.appendChild(baseRow);
   container.appendChild(qualityRow);
   container.appendChild(qualityBoxRow);
-  
-  // Add labels for clarity
-  const labelsDiv = document.createElement('div');
-  labelsDiv.className = 'viz-labels';
-  labelsDiv.innerHTML = `
-    <div><span class="label">Bases:</span> Colored text (A, T, C, G)</div>
-    <div><span class="label">Quality:</span> ASCII characters (hover for %)</div>
-    <div><span class="label">Quality Boxes:</span> Color-coded by quality score</div>
-  `;
-  container.appendChild(labelsDiv);
   
   output.appendChild(container);
 }
