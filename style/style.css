@@ -6,7 +6,7 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%);
   min-height: 100vh;
   padding: 20px;
   color: #333;
@@ -22,7 +22,7 @@ body {
 }
 
 .header {
-  background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+  background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
   color: white;
   padding: 25px 30px;
   text-align: center;
@@ -82,9 +82,9 @@ textarea {
 
 textarea:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #0066cc;
   background: white;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
 .ranges-section {
@@ -111,13 +111,13 @@ textarea:focus {
 
 .range-item:hover {
   background: #fafafa;
-  border-color: #667eea;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+  border-color: #0066cc;
+  box-shadow: 0 2px 8px rgba(0, 102, 204, 0.1);
 }
 
 .range-item.fixed {
-  background: #f0f4ff;
-  border-color: #667eea;
+  background: #e6f2ff;
+  border-color: #0066cc;
 }
 
 .base-label {
@@ -128,6 +128,27 @@ textarea:focus {
   padding: 4px 8px;
   border-radius: 4px;
   color: white;
+}
+
+/* Color each base label according to visualization colors */
+.range-item.fixed .base-label {
+  background-color: #9e9e9e;
+}
+
+.range-item:nth-child(2) .base-label {
+  background-color: #4caf50;
+}
+
+.range-item:nth-child(3) .base-label {
+  background-color: #2196f3;
+}
+
+.range-item:nth-child(4) .base-label {
+  background-color: #ff9800;
+}
+
+.range-item:nth-child(5) .base-label {
+  background-color: #e91e63;
 }
 
 .range-value {
@@ -146,8 +167,8 @@ textarea:focus {
 
 .range-item input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
 .button-container {
@@ -161,17 +182,17 @@ textarea:focus {
   font-size: 0.95em;
   font-weight: 600;
   color: white;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 15px rgba(0, 102, 204, 0.4);
 }
 
 .btn-generate:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  box-shadow: 0 6px 20px rgba(0, 102, 204, 0.6);
 }
 
 .btn-generate:active {
@@ -228,14 +249,14 @@ td:hover {
 .improved-viz {
   margin-top: 20px;
   padding: 15px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  border: 2px solid #667eea;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e0e8f0 100%);
+  border: 2px solid #0066cc;
   border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 102, 204, 0.15);
 }
 
 .improved-viz h3 {
-  color: #667eea;
+  color: #0066cc;
   margin-bottom: 10px;
   font-size: 1.1em;
   font-weight: 600;
@@ -249,7 +270,7 @@ td:hover {
   padding: 8px;
   background: white;
   border-radius: 6px;
-  border-left: 4px solid #667eea;
+  border-left: 4px solid #0066cc;
 }
 
 .viz-row {
