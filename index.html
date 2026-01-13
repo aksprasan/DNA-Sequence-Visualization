@@ -2,49 +2,73 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>8-bit Sequence Visualization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DNA Sequence Visualization</title>
   <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
+  <div class="container">
+    <header class="header">
+      <h1>DNA Sequence Visualization</h1>
+      <p class="subtitle">Analyze genomic sequences with quality scoring</p>
+    </header>
 
-  <h2>8-bit Sequence Visualization</h2>
-
-  <p>
-    Input format (2 lines):<br>
-    Line 1: Header starting with <strong>@</strong><br>
-    Line 2: Every 3 digits represent one 8-bit value (000–255)
-  </p>
-
-  <textarea id="sequenceInput">@SRR4343242342.1
+    <main class="main-content">
+      <section class="input-section">
+        <div class="section-header">
+          <h2>Input Sequence</h2>
+          <p class="help-text">Format: Header line starting with @ followed by 8-bit values (000–255)</p>
+        </div>
+        
+        <textarea id="sequenceInput" placeholder="@SRR4343242342.1&#10;003066129192255128191064032096160224">@SRR4343242342.1
 003066129192255128191064032096160224</textarea>
+      </section>
 
-  <div class="ranges">
-    <div>N: 0–2 & 254–255 (fixed)</div>
-    <div>
-      A:
-      <input id="Amin" value="3"> –
-      <input id="Amax" value="65">
-    </div>
-    <div>
-      C:
-      <input id="Cmin" value="66"> –
-      <input id="Cmax" value="128">
-    </div>
-    <div>
-      G:
-      <input id="Gmin" value="129"> –
-      <input id="Gmax" value="191">
-    </div>
-    <div>
-      T:
-      <input id="Tmin" value="192"> –
-      <input id="Tmax" value="253">
-    </div>
+      <section class="ranges-section">
+        <div class="section-header">
+          <h2>Base Range Configuration</h2>
+          <p class="help-text">Define the value ranges for each nucleotide base</p>
+        </div>
+        
+        <div class="ranges">
+          <div class="range-item fixed">
+            <span class="base-label">N</span>
+            <span class="range-value">0–2 & 254–255 (fixed)</span>
+          </div>
+          <div class="range-item">
+            <span class="base-label">A</span>
+            <input id="Amin" value="3" type="number"> –
+            <input id="Amax" value="65" type="number">
+          </div>
+          <div class="range-item">
+            <span class="base-label">C</span>
+            <input id="Cmin" value="66" type="number"> –
+            <input id="Cmax" value="128" type="number">
+          </div>
+          <div class="range-item">
+            <span class="base-label">G</span>
+            <input id="Gmin" value="129" type="number"> –
+            <input id="Gmax" value="191" type="number">
+          </div>
+          <div class="range-item">
+            <span class="base-label">T</span>
+            <input id="Tmin" value="192" type="number"> –
+            <input id="Tmax" value="253" type="number">
+          </div>
+        </div>
+      </section>
+
+      <div class="button-container">
+        <button class="btn-generate" onclick="generateImage()">Generate Visualization</button>
+      </div>
+
+      <div id="output" class="output-section"></div>
+    </main>
+
+    <footer class="footer">
+      <p>DNA Sequence Visualization Tool • Genomic Analysis</p>
+    </footer>
   </div>
-
-  <button onclick="generateImage()">Generate</button>
-
-  <div id="output"></div>
 
   <script src="js/main.js"></script>
 </body>
